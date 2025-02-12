@@ -155,8 +155,7 @@
         <a href="index.html" class="back">⬅ Back to Home</a>
     </div>
 
- 
-       <script>
+ <script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
         let b = parseFloat(document.getElementById("b").value);
@@ -171,11 +170,11 @@
         // Calculate Odds Ratio (OR)
         let oddsRatio = (a * d) / (b * c);
         let lnOR = Math.log(oddsRatio);
-        let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
+        let standardErrorOR = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
 
         // Calculate 95% Confidence Interval for OR
-        let lowerOR = Math.exp(lnOR - 1.96 * standardError);
-        let upperOR = Math.exp(lnOR + 1.96 * standardError);
+        let lowerOR = Math.exp(lnOR - 1.96 * standardErrorOR);
+        let upperOR = Math.exp(lnOR + 1.96 * standardErrorOR);
 
         // Calculate Attributable Fraction in Exposed (AFE)
         let attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
@@ -187,9 +186,14 @@
 
         // Calculate Population Attributable Fraction (PAF)
         let populationAttributableFraction = ((oddsRatio - 1) / oddsRatio) * p_e;
+
+        // Corrected Standard Error for PAF
+        let standardErrorPAF = Math.sqrt((a / (c * (a + c))) + (b / (d * (b + d))));
+
+        // Corrected 95% Confidence Interval for PAF
         let lnOneMinusPAF = Math.log(1 - populationAttributableFraction);
-        let lowerPAF = 1 - Math.exp(lnOneMinusPAF + 1.96 * standardError);
-        let upperPAF = 1 - Math.exp(lnOneMinusPAF - 1.96 * standardError);
+        let lowerPAF = 1 - Math.exp(lnOneMinusPAF + 1.96 * standardErrorPAF);
+        let upperPAF = 1 - Math.exp(lnOneMinusPAF - 1.96 * standardErrorPAF);
 
         // Convert PAF values to percentages
         populationAttributableFraction *= 100;
