@@ -5,36 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cohort Study Calculator</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        input { margin: 5px; padding: 8px; width: 100px; }
-        button { padding: 10px; margin-top: 10px; }
-        a { display: block; margin: 10px; text-decoration: none; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 22px;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .button {
+            width: 100%;
+            padding: 12px;
+            color: white;
+            background-color: #28A745;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .results-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .results-box h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            font-size: 18px;
+            color: #333;
+        }
     </style>
 </head>
 <body>
-    <h2>Cohort Study Calculator</h2>
-    <p>Enter values for a 2x2 table:</p>
-    <input type="number" id="a" placeholder="Exposed Cases">
-    <input type="number" id="b" placeholder="Exposed Non-Cases"><br>
-    <input type="number" id="c" placeholder="Unexposed Cases">
-    <input type="number" id="d" placeholder="Unexposed Non-Cases"><br>
-    <button onclick="calculateCohort()">Calculate</button>
-    <p id="result"></p>
-    <a href="index.html">Back to Home</a>
-
-    <script>
-        function calculateCohort() {
-            let a = parseFloat(document.getElementById("a").value);
-            let b = parseFloat(document.getElementById("b").value);
-            let c = parseFloat(document.getElementById("c").value);
-            let d = parseFloat(document.getElementById("d").value);
-
-            let riskExposed = a / (a + b);
-            let riskUnexposed = c / (c + d);
-            let relativeRisk = riskExposed / riskUnexposed;
-
-            document.getElementById("result").innerText = `Relative Risk: ${relativeRisk.toFixed(3)}`;
-        }
-    </script>
+    <div class="container">
+        <h2>Cohort Study Calculator</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th>Outcome +</th>
+                <th>Outcome -</th>
+            </tr>
+            <tr>
+                <th>Exposed</th>
+                <td><input type="number" id="a" placeholder="a"></td>
+                <td><input type="number" id="b" placeholder="b"></td>
+            </tr>
+            <tr>
+                <th>Unexposed</th>
+                <td><input type="number" id="c" placeholder="c"></td>
+                <td><input type="number" id="d" placeholder="d"></td>
+            </tr>
+        </table>
+        <button class="button" onclick="calculateResults()">Calculate</button>
+        <div id="results" class="results-box" style="display: none;">
+            <h3>Results</h3>
+            <p><strong>Relative Risk:</strong> <span id="rr-result"></span></p>
+            <p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p>
+            <p><strong>Risk Difference:</strong> <span id="rd-result"></span></p>
+            <p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p>
+            <p><strong>Attributable Fraction in Exposed:</strong> <span id="afe-result"></span></p>
+            <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p>
+            <p><strong>Population Attributable Fraction:</strong> <span id="paf-result"></span></p>
+            <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p>
+            <p><strong>Population Attributable Risk:</strong> <span id="par-result"></span></p>
+            <p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p>
+        </div>
+    </div>
 </body>
 </html>
