@@ -69,10 +69,28 @@
         .button:hover {
             background-color: #218838;
         }
-        .result {
+        .results-box {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: left;
+        }
+        .results-box h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
             font-size: 18px;
-            font-weight: bold;
-            margin-top: 15px;
+            color: #333;
+        }
+        .results-box p {
+            font-size: 16px;
+            color: #444;
+            margin: 8px 0;
+            padding: 5px;
+            background: #fff;
+            border-radius: 5px;
         }
         .back {
             display: block;
@@ -111,7 +129,16 @@
         </table>
 
         <button class="button" onclick="calculateResults()">Calculate</button>
-        <p class="result" id="result"></p>
+
+        <div id="result" class="results-box" style="display: none;">
+            <h3>📊 Results</h3>
+            <p><strong>Odds Ratio:</strong> <span id="or-result"></span></p>
+            <p><strong>95% CI for OR:</strong> <span id="or-ci"></span></p>
+            <p><strong>Attributable Fraction in Exposed:</strong> <span id="afe-result"></span></p>
+            <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p>
+            <p><strong>Population Attributable Fraction:</strong> <span id="paf-result"></span></p>
+            <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p>
+        </div>
 
         <a href="index.html" class="back">⬅ Back to Home</a>
     </div>
@@ -140,19 +167,19 @@
                 let lowerPAF = (p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1));
                 let upperPAF = (p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1));
 
-                document.getElementById("result").innerHTML = `
-                    <strong>Odds Ratio:</strong> ${oddsRatio.toFixed(5)}<br>
-                    <strong>95% CI for OR:</strong> (${lowerOR.toFixed(5)} – ${upperOR.toFixed(5)})<br><br>
-                    <strong>Attributable Fraction in Exposed:</strong> ${attributableFractionExposed.toFixed(5)}<br>
-                    <strong>95% CI for AFE:</strong> (${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})<br><br>
-                    <strong>Population Attributable Fraction:</strong> ${populationAttributableFraction.toFixed(5)}<br>
-                    <strong>95% CI for PAF:</strong> (${lowerPAF.toFixed(5)} – ${upperPAF.toFixed(5)})`;
+                document.getElementById("or-result").innerText = oddsRatio.toFixed(5);
+                document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(5)} – ${upperOR.toFixed(5)})`;
+                document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(5);
+                document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})`;
+                document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(5);
+                document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(5)} – ${upperPAF.toFixed(5)})`;
+
+                document.getElementById("result").style.display = "block";
             } else {
-                document.getElementById("result").innerText = "Please enter valid numbers.";
+                alert("Please enter valid numbers.");
             }
         }
     </script>
 
 </body>
 </html>
-
