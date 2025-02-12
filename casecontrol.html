@@ -155,49 +155,59 @@
         <a href="index.html" class="back">⬅ Back to Home</a>
     </div>
 
-    <script>
-        function calculateResults() {
-    let a = parseFloat(document.getElementById("a").value);
-    let b = parseFloat(document.getElementById("b").value);
-    let c = parseFloat(document.getElementById("c").value);
-    let d = parseFloat(document.getElementById("d").value);
+ 
+       <script>
+    function calculateResults() {
+        let a = parseFloat(document.getElementById("a").value);
+        let b = parseFloat(document.getElementById("b").value);
+        let c = parseFloat(document.getElementById("c").value);
+        let d = parseFloat(document.getElementById("d").value);
 
-    if (!a || !b || !c || !d) {
-        alert("Please enter valid numbers.");
-        return;
+        if (!a || !b || !c || !d) {
+            alert("Please enter valid numbers.");
+            return;
+        }
+
+        // Calculate Odds Ratio (OR)
+        let oddsRatio = (a * d) / (b * c);
+        let lnOR = Math.log(oddsRatio);
+        let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
+
+        // Calculate 95% Confidence Interval for OR
+        let lowerOR = Math.exp(lnOR - 1.96 * standardError);
+        let upperOR = Math.exp(lnOR + 1.96 * standardError);
+
+        // Calculate Attributable Fraction in Exposed (AFE)
+        let attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
+        let lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
+        let upperAFE = ((upperOR - 1) / upperOR) * 100;
+
+        // Calculate proportion of cases that are exposed (Pe)
+        let p_e = a / (a + c);
+
+        // Calculate Population Attributable Fraction (PAF)
+        let populationAttributableFraction = ((oddsRatio - 1) / oddsRatio) * p_e;
+        let lnOneMinusPAF = Math.log(1 - populationAttributableFraction);
+        let lowerPAF = 1 - Math.exp(lnOneMinusPAF + 1.96 * standardError);
+        let upperPAF = 1 - Math.exp(lnOneMinusPAF - 1.96 * standardError);
+
+        // Convert PAF values to percentages
+        populationAttributableFraction *= 100;
+        lowerPAF *= 100;
+        upperPAF *= 100;
+
+        // Display results
+        document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
+        document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
+        document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
+        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
+        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
+        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
+
+        document.getElementById("results-container").style.display = "block";
     }
+</script>
 
-    // Calculate Odds Ratio (OR)
-    let oddsRatio = (a * d) / (b * c);
-    let lnOR = Math.log(oddsRatio);
-    let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
-
-    // Calculate 95% Confidence Interval for OR
-    let lowerOR = Math.exp(lnOR - 1.96 * standardError);
-    let upperOR = Math.exp(lnOR + 1.96 * standardError);
-
-    // Calculate Attributable Fraction in Exposed (AFE)
-    let attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
-    let lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
-    let upperAFE = ((upperOR - 1) / upperOR) * 100;
-
-    // Calculate proportion of cases that are exposed (Pe)
-    let p_e = a / (a + c);
-
-    // Calculate Population Attributable Fraction (PAF) using the specified formula
-    let populationAttributableFraction = ((oddsRatio - 1) / oddsRatio) * p_e * 100;
-
-    // Display results
-    document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
-    document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
-    document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
-    document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
-    document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
-    document.getElementById("paf-ci").innerText = `(${populationAttributableFraction.toFixed(3)} – ${populationAttributableFraction.toFixed(3)})`;
-
-    document.getElementById("results-container").style.display = "block";
-}
-    </script>
 
 </body>
 </html>
