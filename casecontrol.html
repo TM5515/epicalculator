@@ -183,9 +183,12 @@
         let populationAttributableFraction = "N/A";
         let lowerPAF = "N/A";
         let upperPAF = "N/A";
+        let showPercentageSymbol = false;
 
         // Only calculate AFE and PAF if OR >= 1
         if (oddsRatio >= 1) {
+            showPercentageSymbol = true;
+
             // Calculate Attributable Fraction in Exposed (AFE)
             attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
             lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
@@ -222,14 +225,17 @@
         // Display results
         document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
         document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
-        document.getElementById("afe-result").innerText = attributableFractionExposed;
-        document.getElementById("afe-ci").innerText = (attributableFractionExposed === "N/A") ? "N/A" : `(${lowerAFE} – ${upperAFE})`;
-        document.getElementById("paf-result").innerText = populationAttributableFraction;
-        document.getElementById("paf-ci").innerText = (populationAttributableFraction === "N/A") ? "N/A" : `(${lowerPAF} – ${upperPAF})`;
+
+        document.getElementById("afe-result").innerText = showPercentageSymbol ? `${attributableFractionExposed}%` : "N/A";
+        document.getElementById("afe-ci").innerText = showPercentageSymbol ? `(${lowerAFE}% – ${upperAFE}%)` : "N/A";
+
+        document.getElementById("paf-result").innerText = showPercentageSymbol ? `${populationAttributableFraction}%` : "N/A";
+        document.getElementById("paf-ci").innerText = showPercentageSymbol ? `(${lowerPAF}% – ${upperPAF}%)` : "N/A";
 
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
 
 
