@@ -5,16 +5,62 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Epidemiology Calculators</title>
     <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 50px; }
-        a { display: block; margin: 10px; padding: 10px; text-decoration: none; background-color: #007BFF; color: white; width: 200px; margin: auto; }
-        a:hover { background-color: #0056b3; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        img {
+            width: 120px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        .button {
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+            padding: 12px;
+            text-decoration: none;
+            color: white;
+            background-color: #007BFF;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
-    <h2>Welcome to the Epidemiology Calculators</h2>
-    <p>Select a calculator:</p>
-    <a href="cohort.html">Cohort Study Calculator</a>
-    <a href="casecontrol.html">Case-Control Study Calculator</a>
-    <a href="crosssectional.html">Cross-Sectional Study Calculator</a>
+
+    <div class="container">
+        <img src="logo.png" alt="Logo">
+        <h1>Welcome to the Epidemiology for Public Health Calculators</h1>
+        <p>Choose a calculator to analyze epidemiological data.</p>
+        
+        <a href="cohort.html" class="button">📊 Cohort Study Calculator</a>
+        <a href="casecontrol.html" class="button">🧪 Case-Control Study Calculator</a>
+        <a href="crosssectional.html" class="button">📋 Cross-Sectional Study Calculator</a>
+    </div>
+
 </body>
 </html>
