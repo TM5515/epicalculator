@@ -179,9 +179,9 @@
             let upperAFE = ((upperOR - 1) / upperOR) * 100;
 
             let p_e = a / (a + c);
-            let populationAttributableFraction = ((p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1))) * 100;
-            let lowerPAF = ((p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1))) * 100;
-            let upperPAF = ((p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1))) * 100;
+            let populationAttributableFraction = (p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1)) * 100;
+            let lowerPAF = (p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1)) * 100;
+            let upperPAF = (p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1)) * 100;
 
             document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
             document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
