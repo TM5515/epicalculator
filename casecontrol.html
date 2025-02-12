@@ -135,11 +135,18 @@
                 let lowerAFE = (lowerOR - 1) / lowerOR;
                 let upperAFE = (upperOR - 1) / upperOR;
 
+                let p_e = a / (a + c);
+                let populationAttributableFraction = (p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1));
+                let lowerPAF = (p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1));
+                let upperPAF = (p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1));
+
                 document.getElementById("result").innerHTML = `
                     <strong>Odds Ratio:</strong> ${oddsRatio.toFixed(5)}<br>
                     <strong>95% CI for OR:</strong> (${lowerOR.toFixed(5)} – ${upperOR.toFixed(5)})<br><br>
                     <strong>Attributable Fraction in Exposed:</strong> ${attributableFractionExposed.toFixed(5)}<br>
-                    <strong>95% CI for AFE:</strong> (${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})`;
+                    <strong>95% CI for AFE:</strong> (${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})<br><br>
+                    <strong>Population Attributable Fraction:</strong> ${populationAttributableFraction.toFixed(5)}<br>
+                    <strong>95% CI for PAF:</strong> (${lowerPAF.toFixed(5)} – ${upperPAF.toFixed(5)})`;
             } else {
                 document.getElementById("result").innerText = "Please enter valid numbers.";
             }
@@ -148,3 +155,4 @@
 
 </body>
 </html>
+
