@@ -134,21 +134,21 @@
 
         <div id="results-container" class="results-container">
             <div class="results-box">
-                <h3>📊 Odds Ratio & 95% CI</h3>
+                <h3>📌 Odds Ratio & 95% CI</h3>
                 <p><strong>Odds Ratio:</strong> <span id="or-result"></span></p>
                 <p><strong>95% CI for OR:</strong> <span id="or-ci"></span></p>
             </div>
 
             <div class="results-box">
-                <h3>🧮 Attributable Fraction in Exposed (AFE)</h3>
-                <p><strong>AFE:</strong> <span id="afe-result"></span></p>
-                <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p>
+                <h3>📌 Attributable Fraction in Exposed (AFE)</h3>
+                <p><strong>AFE:</strong> <span id="afe-result"></span>%</p>
+                <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span>%</p>
             </div>
 
             <div class="results-box">
-                <h3>🌎 Population Attributable Fraction (PAF)</h3>
-                <p><strong>PAF:</strong> <span id="paf-result"></span></p>
-                <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p>
+                <h3>📌 Population Attributable Fraction (PAF)</h3>
+                <p><strong>PAF:</strong> <span id="paf-result"></span>%</p>
+                <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p>
             </div>
         </div>
 
@@ -162,34 +162,35 @@
             let c = parseFloat(document.getElementById("c").value);
             let d = parseFloat(document.getElementById("d").value);
 
-            if (a > 0 && b > 0 && c > 0 && d > 0) {
-                let oddsRatio = (a * d) / (b * c);
-                let lnOR = Math.log(oddsRatio);
-                let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
-
-                let lowerOR = Math.exp(lnOR - 1.96 * standardError);
-                let upperOR = Math.exp(lnOR + 1.96 * standardError);
-
-                let attributableFractionExposed = (oddsRatio - 1) / oddsRatio;
-                let lowerAFE = (lowerOR - 1) / lowerOR;
-                let upperAFE = (upperOR - 1) / upperOR;
-
-                let p_e = a / (a + c);
-                let populationAttributableFraction = (p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1));
-                let lowerPAF = (p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1));
-                let upperPAF = (p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1));
-
-                document.getElementById("or-result").innerText = oddsRatio.toFixed(5);
-                document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(5)} – ${upperOR.toFixed(5)})`;
-                document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(5);
-                document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})`;
-                document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(5);
-                document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(5)} – ${upperPAF.toFixed(5)})`;
-
-                document.getElementById("results-container").style.display = "block";
-            } else {
+            if (!a || !b || !c || !d) {
                 alert("Please enter valid numbers.");
+                return;
             }
+
+            let oddsRatio = (a * d) / (b * c);
+            let lnOR = Math.log(oddsRatio);
+            let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
+
+            let lowerOR = Math.exp(lnOR - 1.96 * standardError);
+            let upperOR = Math.exp(lnOR + 1.96 * standardError);
+
+            let attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
+            let lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
+            let upperAFE = ((upperOR - 1) / upperOR) * 100;
+
+            let p_e = a / (a + c);
+            let populationAttributableFraction = ((p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1))) * 100;
+            let lowerPAF = ((p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1))) * 100;
+            let upperPAF = ((p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1))) * 100;
+
+            document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
+            document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
+            document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
+            document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
+            document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
+            document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
+
+            document.getElementById("results-container").style.display = "block";
         }
     </script>
 
