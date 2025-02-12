@@ -59,6 +59,10 @@
         .button:hover {
             background-color: #218838;
         }
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
         .results-box {
             background: white;
             border: 1px solid #ddd;
@@ -79,7 +83,7 @@
 </head>
 <body>
     <div class="container">
-        <h2>Cohort Study Calculator</h2>
+        <h2>📊 Cohort Study Calculator</h2>
         <table>
             <tr>
                 <th></th>
@@ -98,18 +102,12 @@
             </tr>
         </table>
         <button class="button" onclick="calculateResults()">Calculate</button>
-        <div id="results" class="results-box" style="display: none;">
-            <h3>Results</h3>
-            <p><strong>Relative Risk:</strong> <span id="rr-result"></span></p>
-            <p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p>
-            <p><strong>Risk Difference:</strong> <span id="rd-result"></span></p>
-            <p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p>
-            <p><strong>Attributable Fraction in Exposed:</strong> <span id="afe-result"></span></p>
-            <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p>
-            <p><strong>Population Attributable Fraction:</strong> <span id="paf-result"></span></p>
-            <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p>
-            <p><strong>Population Attributable Risk:</strong> <span id="par-result"></span></p>
-            <p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p>
+        <div id="results-container" class="results-container">
+            <div class="results-box"><h3>📌 Relative Risk & 95% CI</h3><p id="rr-result"></p></div>
+            <div class="results-box"><h3>📌 Risk Difference & 95% CI</h3><p id="rd-result"></p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction in Exposed & 95% CI</h3><p id="afe-result"></p></div>
+            <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p id="paf-result"></p></div>
+            <div class="results-box"><h3>📌 Population Attributable Risk & 95% CI</h3><p id="par-result"></p></div>
         </div>
     </div>
     <script>
@@ -138,7 +136,7 @@
             document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
             document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
             document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
-            document.getElementById("results").style.display = "block";
+            document.getElementById("results-container").style.display = "block";
         }
     </script>
 </body>
