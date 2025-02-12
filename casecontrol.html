@@ -155,7 +155,7 @@
         <a href="index.html" class="back">⬅ Back to Home</a>
     </div>
 
- <script>
+<script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
         let b = parseFloat(document.getElementById("b").value);
@@ -176,41 +176,61 @@
         let lowerOR = Math.exp(lnOR - 1.96 * standardErrorOR);
         let upperOR = Math.exp(lnOR + 1.96 * standardErrorOR);
 
-        // Calculate Attributable Fraction in Exposed (AFE)
-        let attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
-        let lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
-        let upperAFE = ((upperOR - 1) / upperOR) * 100;
+        // Initialize AFE and PAF as "N/A" if OR < 1
+        let attributableFractionExposed = "N/A";
+        let lowerAFE = "N/A";
+        let upperAFE = "N/A";
+        let populationAttributableFraction = "N/A";
+        let lowerPAF = "N/A";
+        let upperPAF = "N/A";
 
-        // Calculate proportion of cases that are exposed (Pe)
-        let p_e = a / (a + c);
+        // Only calculate AFE and PAF if OR >= 1
+        if (oddsRatio >= 1) {
+            // Calculate Attributable Fraction in Exposed (AFE)
+            attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
+            lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
+            upperAFE = ((upperOR - 1) / upperOR) * 100;
 
-        // Calculate Population Attributable Fraction (PAF)
-        let populationAttributableFraction = ((oddsRatio - 1) / oddsRatio) * p_e;
+            // Calculate proportion of cases that are exposed (Pe)
+            let p_e = a / (a + c);
 
-        // Corrected Standard Error for PAF
-        let standardErrorPAF = Math.sqrt((a / (c * (a + c))) + (b / (d * (b + d))));
+            // Calculate Population Attributable Fraction (PAF)
+            populationAttributableFraction = ((oddsRatio - 1) / oddsRatio) * p_e;
 
-        // Corrected 95% Confidence Interval for PAF
-        let lnOneMinusPAF = Math.log(1 - populationAttributableFraction);
-        let lowerPAF = 1 - Math.exp(lnOneMinusPAF + 1.96 * standardErrorPAF);
-        let upperPAF = 1 - Math.exp(lnOneMinusPAF - 1.96 * standardErrorPAF);
+            // Corrected Standard Error for PAF
+            let standardErrorPAF = Math.sqrt((a / (c * (a + c))) + (b / (d * (b + d))));
 
-        // Convert PAF values to percentages
-        populationAttributableFraction *= 100;
-        lowerPAF *= 100;
-        upperPAF *= 100;
+            // Corrected 95% Confidence Interval for PAF
+            let lnOneMinusPAF = Math.log(1 - populationAttributableFraction);
+            lowerPAF = 1 - Math.exp(lnOneMinusPAF + 1.96 * standardErrorPAF);
+            upperPAF = 1 - Math.exp(lnOneMinusPAF - 1.96 * standardErrorPAF);
+
+            // Convert PAF values to percentages
+            populationAttributableFraction *= 100;
+            lowerPAF *= 100;
+            upperPAF *= 100;
+
+            // Ensure all results are rounded to three decimal places
+            attributableFractionExposed = attributableFractionExposed.toFixed(3);
+            lowerAFE = lowerAFE.toFixed(3);
+            upperAFE = upperAFE.toFixed(3);
+            populationAttributableFraction = populationAttributableFraction.toFixed(3);
+            lowerPAF = lowerPAF.toFixed(3);
+            upperPAF = upperPAF.toFixed(3);
+        }
 
         // Display results
         document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
         document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
-        document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
-        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
-        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
-        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
+        document.getElementById("afe-result").innerText = attributableFractionExposed;
+        document.getElementById("afe-ci").innerText = (attributableFractionExposed === "N/A") ? "N/A" : `(${lowerAFE} – ${upperAFE})`;
+        document.getElementById("paf-result").innerText = populationAttributableFraction;
+        document.getElementById("paf-ci").innerText = (populationAttributableFraction === "N/A") ? "N/A" : `(${lowerPAF} – ${upperPAF})`;
 
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
 
 </body>
