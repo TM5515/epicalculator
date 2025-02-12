@@ -45,4 +45,153 @@
             color: white;
         }
         input {
-            width
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-decoration: none;
+            color: white;
+            background-color: #28A745;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .results-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .results-box h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            font-size: 18px;
+            color: #333;
+        }
+        .results-box p {
+            font-size: 16px;
+            color: #444;
+            margin: 8px 0;
+        }
+        .back {
+            display: block;
+            margin-top: 15px;
+            font-size: 14px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+        .back:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>👩🏻‍🔬 Case-Control Study Calculator</h2>
+        <p>Enter values in the 2x2 table below:</p>
+
+        <table>
+            <tr>
+                <th></th>
+                <th>Cases</th>
+                <th>Controls</th>
+            </tr>
+            <tr>
+                <th>Exposed</th>
+                <td><input type="number" id="a" placeholder="a"></td>
+                <td><input type="number" id="b" placeholder="b"></td>
+            </tr>
+            <tr>
+                <th>Unexposed</th>
+                <td><input type="number" id="c" placeholder="c"></td>
+                <td><input type="number" id="d" placeholder="d"></td>
+            </tr>
+        </table>
+
+        <button class="button" onclick="calculateResults()">Calculate</button>
+
+        <div id="results-container" class="results-container">
+            <div class="results-box">
+                <h3>📊 Odds Ratio & 95% CI</h3>
+                <p><strong>Odds Ratio:</strong> <span id="or-result"></span></p>
+                <p><strong>95% CI for OR:</strong> <span id="or-ci"></span></p>
+            </div>
+
+            <div class="results-box">
+                <h3>🧮 Attributable Fraction in Exposed (AFE)</h3>
+                <p><strong>AFE:</strong> <span id="afe-result"></span></p>
+                <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p>
+            </div>
+
+            <div class="results-box">
+                <h3>🌎 Population Attributable Fraction (PAF)</h3>
+                <p><strong>PAF:</strong> <span id="paf-result"></span></p>
+                <p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p>
+            </div>
+        </div>
+
+        <a href="index.html" class="back">⬅ Back to Home</a>
+    </div>
+
+    <script>
+        function calculateResults() {
+            let a = parseFloat(document.getElementById("a").value);
+            let b = parseFloat(document.getElementById("b").value);
+            let c = parseFloat(document.getElementById("c").value);
+            let d = parseFloat(document.getElementById("d").value);
+
+            if (a > 0 && b > 0 && c > 0 && d > 0) {
+                let oddsRatio = (a * d) / (b * c);
+                let lnOR = Math.log(oddsRatio);
+                let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
+
+                let lowerOR = Math.exp(lnOR - 1.96 * standardError);
+                let upperOR = Math.exp(lnOR + 1.96 * standardError);
+
+                let attributableFractionExposed = (oddsRatio - 1) / oddsRatio;
+                let lowerAFE = (lowerOR - 1) / lowerOR;
+                let upperAFE = (upperOR - 1) / upperOR;
+
+                let p_e = a / (a + c);
+                let populationAttributableFraction = (p_e * (oddsRatio - 1)) / (1 + p_e * (oddsRatio - 1));
+                let lowerPAF = (p_e * (lowerOR - 1)) / (1 + p_e * (lowerOR - 1));
+                let upperPAF = (p_e * (upperOR - 1)) / (1 + p_e * (upperOR - 1));
+
+                document.getElementById("or-result").innerText = oddsRatio.toFixed(5);
+                document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(5)} – ${upperOR.toFixed(5)})`;
+                document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(5);
+                document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(5)} – ${upperAFE.toFixed(5)})`;
+                document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(5);
+                document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(5)} – ${upperPAF.toFixed(5)})`;
+
+                document.getElementById("results-container").style.display = "block";
+            } else {
+                alert("Please enter valid numbers.");
+            }
+        }
+    </script>
+
+</body>
+</html>
