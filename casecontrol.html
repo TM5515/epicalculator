@@ -32,7 +32,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 10px 0;
+            margin: 10px 0 20px;
         }
         th, td {
             border: 1px solid #ccc;
@@ -62,12 +62,12 @@
             border: none;
             border-radius: 5px;
             font-size: 16px;
-            margin-top: 10px;
+            margin-top: 20px;
             cursor: pointer;
             transition: 0.3s;
         }
         .button:hover {
-            background-color: #218838; /* Darker green on hover */
+            background-color: #218838;
         }
         .result {
             font-size: 18px;
@@ -125,7 +125,15 @@
 
             if (a > 0 && b > 0 && c > 0 && d > 0) {
                 let oddsRatio = (a * d) / (b * c);
-                document.getElementById("result").innerText = `Odds Ratio: ${oddsRatio.toFixed(3)}`;
+                let lnOR = Math.log(oddsRatio);
+                let standardError = Math.sqrt((1 / a) + (1 / b) + (1 / c) + (1 / d));
+
+                let lowerCI = Math.exp(lnOR - 1.96 * standardError);
+                let upperCI = Math.exp(lnOR + 1.96 * standardError);
+
+                document.getElementById("result").innerHTML = `
+                    <strong>Odds Ratio:</strong> ${oddsRatio.toFixed(3)}<br>
+                    <strong>95% CI:</strong> (${lowerCI.toFixed(3)} – ${upperCI.toFixed(3)})`;
             } else {
                 document.getElementById("result").innerText = "Please enter valid numbers.";
             }
