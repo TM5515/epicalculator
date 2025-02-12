@@ -83,8 +83,8 @@
         <table>
             <tr>
                 <th></th>
-                <th>Outcome +</th>
-                <th>Outcome -</th>
+                <th>Disease</th>
+                <th>No Disease</th>
             </tr>
             <tr>
                 <th>Exposed</th>
@@ -112,5 +112,34 @@
             <p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p>
         </div>
     </div>
+    <script>
+        function calculateResults() {
+            let a = parseFloat(document.getElementById("a").value);
+            let b = parseFloat(document.getElementById("b").value);
+            let c = parseFloat(document.getElementById("c").value);
+            let d = parseFloat(document.getElementById("d").value);
+
+            if (!a || !b || !c || !d) {
+                alert("Please enter valid numbers.");
+                return;
+            }
+            
+            let riskExposed = a / (a + b);
+            let riskUnexposed = c / (c + d);
+            let relativeRisk = riskExposed / riskUnexposed;
+            let riskDifference = riskExposed - riskUnexposed;
+            let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
+            let p_e = (a + c) / (a + b + c + d);
+            let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
+            let populationAttributableRisk = populationAttributableFraction * riskDifference;
+            
+            document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
+            document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
+            document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
+            document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
+            document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
+            document.getElementById("results").style.display = "block";
+        }
+    </script>
 </body>
 </html>
