@@ -144,15 +144,21 @@
         let lowerRD = riskDifference - 1.96 * standardErrorRD;
         let upperRD = riskDifference + 1.96 * standardErrorRD;
         let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
+        let lowerAFE = (1 - (1 / upperRR)) * 100;
+        let upperAFE = (1 - (1 / lowerRR)) * 100;
         let p_e = (a + c) / (a + b + c + d);
         let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
         let populationAttributableRisk = populationAttributableFraction * riskDifference;
+        let standardErrorPAR = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
+        let lowerPAR = populationAttributableRisk - 1.96 * standardErrorPAR;
+        let upperPAR = populationAttributableRisk + 1.96 * standardErrorPAR;
         
         document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
         document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
+        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
         document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
         document.getElementById("results-container").style.display = "block";
