@@ -1,3 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Study Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 22px;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-decoration: none;
+            color: white;
+            background-color: #28A745;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .results-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .results-box h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📊 Cohort Study Calculator</h2>
+        <p>Enter values in the 2x2 table below:</p>
+        <table>
+            <tr>
+                <th></th>
+                <th>Disease</th>
+                <th>No Disease</th>
+            </tr>
+            <tr>
+                <th>Exposed</th>
+                <td><input type="number" id="a" placeholder="a"></td>
+                <td><input type="number" id="b" placeholder="b"></td>
+            </tr>
+            <tr>
+                <th>Unexposed</th>
+                <td><input type="number" id="c" placeholder="c"></td>
+                <td><input type="number" id="d" placeholder="d"></td>
+            </tr>
+        </table>
+        <button class="button" onclick="calculateResults()">Calculate</button>
+        <div id="results-container" class="results-container">
+            <div class="results-box"><h3>📌 Relative Risk & 95% CI</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Risk Difference & 95% CI</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>) & 95% CI</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Population Attributable Risk & 95% CI</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
+        </div>
+    </div>
 <script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
@@ -66,3 +189,7 @@
     }
 </script>
 
+
+    <a href="index.html" class="back">⬅ Back to Home</a>
+</body>
+</html>
