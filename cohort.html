@@ -154,10 +154,9 @@
         let lowerAFE = (1 - (1 / upperRR)) * 100;
         let upperAFE = (1 - (1 / lowerRR)) * 100;
         
-        let p_e = (a + c) / total_sample;
-        let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
-        
         let PAR = risk_total - risk_unexposed;
+        let populationAttributableFraction = (PAR / (total_disease_positive / total_sample)) * 100;
+        
         let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
         let lowerPAR = PAR - 1.96 * SE_PAR;
         let upperPAR = PAR + 1.96 * SE_PAR;
@@ -176,6 +175,7 @@
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
     <a href="index.html" class="back">⬅ Back to Home</a>
 </body>
