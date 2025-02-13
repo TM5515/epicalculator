@@ -1,73 +1,173 @@
-function calculateResults() {
-    let a = parseFloat(document.getElementById("a").value);
-    let b = parseFloat(document.getElementById("b").value);
-    let c = parseFloat(document.getElementById("c").value);
-    let d = parseFloat(document.getElementById("d").value);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cohort Study Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            font-size: 22px;
+            color: #333;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 20px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+            font-size: 16px;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        input {
+            width: 80px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 16px;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            text-decoration: none;
+            color: white;
+            background-color: #28A745;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .button:hover {
+            background-color: #218838;
+        }
+        .results-container {
+            display: none;
+            margin-top: 20px;
+        }
+        .results-box {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: left;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .results-box h3 {
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ddd;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📊 Cohort Study Calculator</h2>
+        <p>Enter values in the 2x2 table below:</p>
+        <table>
+            <tr>
+                <th></th>
+                <th>Disease</th>
+                <th>No Disease</th>
+            </tr>
+            <tr>
+                <th>Exposed</th>
+                <td><input type="number" id="a" placeholder="a"></td>
+                <td><input type="number" id="b" placeholder="b"></td>
+            </tr>
+            <tr>
+                <th>Unexposed</th>
+                <td><input type="number" id="c" placeholder="c"></td>
+                <td><input type="number" id="d" placeholder="d"></td>
+            </tr>
+        </table>
+        <button class="button" onclick="calculateResults()">Calculate</button>
+        <div id="results-container" class="results-container">
+            <div class="results-box"><h3>📌 Relative Risk & 95% CI</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Risk Difference & 95% CI</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction (AF<sub>e</sub>) & 95% CI</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Population Attributable Risk & 95% CI</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
+        </div>
+    </div>
+<script>
+    function calculateResults() {
+        let a = parseFloat(document.getElementById("a").value);
+        let b = parseFloat(document.getElementById("b").value);
+        let c = parseFloat(document.getElementById("c").value);
+        let d = parseFloat(document.getElementById("d").value);
 
-    if (!a || !b || !c || !d) {
-        alert("Please enter valid numbers.");
-        return;
+        if (!a || !b || !c || !d) {
+            alert("Please enter valid numbers.");
+            return;
+        }
+        
+        let riskExposed = a / (a + b);
+        let riskUnexposed = c / (c + d);
+        let relativeRisk = riskExposed / riskUnexposed;
+        let standardErrorRR = 1.96 * Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerRR = relativeRisk / standardErrorRR;
+        let upperRR = relativeRisk * standardErrorRR;
+        let riskDifference = riskExposed - riskUnexposed;
+        let standardErrorRD = Math.sqrt(((riskExposed * (1 - riskExposed)) / (a + b)) + ((riskUnexposed * (1 - riskUnexposed)) / (c + d)));
+        let lowerRD = riskDifference - 1.96 * standardErrorRD;
+        let upperRD = riskDifference + 1.96 * standardErrorRD;
+        let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
+        let lowerAFE = (1 - (1 / upperRR)) * 100;
+        let upperAFE = (1 - (1 / lowerRR)) * 100;
+        let p_e = (a + c) / (a + b + c + d);
+        let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
+        let populationAttributableRisk = populationAttributableFraction * riskDifference;
+        let standardErrorPAR = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
+        let lowerPAR = populationAttributableRisk - 1.96 * standardErrorPAR;
+        let upperPAR = populationAttributableRisk + 1.96 * standardErrorPAR;
+        
+        document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
+        document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
+        document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
+        document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
+        document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
+        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
+        let standardErrorPAF = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
+        let lowerPAF = populationAttributableFraction - 1.96 * standardErrorPAF;
+        let upperPAF = populationAttributableFraction + 1.96 * standardErrorPAF;
+        
+        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
+        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
+        document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
+        document.getElementById("results-container").style.display = "block";
     }
-    
-    // Risk calculations
-    let riskExposed = a / (a + b);
-    let riskUnexposed = c / (c + d);
-    let relativeRisk = riskExposed / riskUnexposed;
-
-    // RR Confidence Interval
-    let lnRR = Math.log(relativeRisk);
-    let seLogRR = Math.sqrt((1 - riskExposed)/(a * riskExposed) + (1 - riskUnexposed)/(c * riskUnexposed));
-    let lowerRR = Math.exp(lnRR - 1.96 * seLogRR);
-    let upperRR = Math.exp(lnRR + 1.96 * seLogRR);
-
-    // Risk Difference and CI
-    let riskDifference = riskExposed - riskUnexposed;
-    let standardErrorRD = Math.sqrt(((riskExposed * (1 - riskExposed)) / (a + b)) + 
-                                  ((riskUnexposed * (1 - riskUnexposed)) / (c + d)));
-    let lowerRD = riskDifference - 1.96 * standardErrorRD;
-    let upperRD = riskDifference + 1.96 * standardErrorRD;
-
-    // Attributable Fraction in Exposed (AFe) and CI
-    let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
-    let lowerAFE = (1 - (1/lowerRR)) * 100;  // Modified as requested
-    let upperAFE = (1 - (1/upperRR)) * 100;  // Modified as requested
-
-    // Population Attributable Fraction (PAF)
-    let prevalenceExposed = (a + b) / (a + b + c + d);
-    let paf = (prevalenceExposed * (relativeRisk - 1)) / 
-              (1 + prevalenceExposed * (relativeRisk - 1)) * 100;
-    
-    // PAF Confidence Interval using delta method
-    let sePAF = Math.sqrt(
-        (prevalenceExposed * prevalenceExposed * Math.pow(relativeRisk, 2) * 
-         ((1 - riskExposed)/(a * riskExposed) + (1 - riskUnexposed)/(c * riskUnexposed))) /
-        Math.pow(1 + prevalenceExposed * (relativeRisk - 1), 4)
-    );
-    let lowerPAF = paf - (1.96 * sePAF * 100);
-    let upperPAF = paf + (1.96 * sePAF * 100);
-
-    // Population Attributable Risk (PAR)
-    let totalRisk = (a + c) / (a + b + c + d);
-    let par = totalRisk - riskUnexposed;
-    
-    // PAR Confidence Interval
-    let sePAR = Math.sqrt(
-        (totalRisk * (1 - totalRisk) / (a + b + c + d)) +
-        (riskUnexposed * (1 - riskUnexposed) / (c + d))
-    );
-    let lowerPAR = par - (1.96 * sePAR);
-    let upperPAR = par + (1.96 * sePAR);
-
-    // Display results
-    document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
-    document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
-    document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
-    document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
-    document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
-    document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
-    document.getElementById("paf-result").innerText = paf.toFixed(3);
-    document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
-    document.getElementById("par-result").innerText = par.toFixed(3);
-    document.getElementById("par-ci").innerText = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
-    document.getElementById("results-container").style.display = "block";
-}
+</script>
+</body>
+</html>
