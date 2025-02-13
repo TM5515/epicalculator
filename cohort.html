@@ -121,7 +121,8 @@
             <div class="results-box"><h3>📌 Population Attributable Risk & 95% CI</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
         </div>
     </div>
-<script>
+
+    <script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
         let b = parseFloat(document.getElementById("b").value);
@@ -141,9 +142,9 @@
         let risk_unexposed = c / total_unexposed;
         
         let relativeRisk = (a / (a + b)) / (c / (c + d));
-        let standardErrorRR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
-        let lowerRR = relativeRisk / Math.exp(1.96 * standardErrorRR);
-        let upperRR = relativeRisk * Math.exp(1.96 * standardErrorRR);
+        let SE_lnRR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerRR = relativeRisk * Math.exp(-1.96 * SE_lnRR);
+        let upperRR = relativeRisk * Math.exp(1.96 * SE_lnRR);
         
         let riskDifference = (a / (a + b)) - (c / (c + d));
         let standardErrorRD = Math.sqrt(((a / (a + b)) * (1 - (a / (a + b))) / (a + b)) + ((c / (c + d)) * (1 - (c / (c + d))) / (c + d)));
@@ -151,9 +152,8 @@
         let upperRD = riskDifference + 1.96 * standardErrorRD;
         
         let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
-        
-        let lowerAFE = 1 - 1 / (relativeRisk * standardErrorRR);
-        let upperAFE = 1 - 1 / (relativeRisk / standardErrorRR);
+        let lowerAFE = 1 - (1 / upperRR);
+        let upperAFE = 1 - (1 / lowerRR);
         
         lowerAFE = Math.max(0, lowerAFE) * 100;
         upperAFE = Math.min(100, upperAFE) * 100;
@@ -187,6 +187,7 @@
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
 
 
