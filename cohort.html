@@ -159,10 +159,16 @@
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
         document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
+        let standardErrorPAF = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
+        let lowerPAF = populationAttributableFraction - 1.96 * standardErrorPAF;
+        let upperPAF = populationAttributableFraction + 1.96 * standardErrorPAF;
+        
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
+        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
         document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
         document.getElementById("results-container").style.display = "block";
     }
 </script>
 </body>
 </html>
+
