@@ -151,7 +151,7 @@
         document.getElementById("afe-result").innerText = afe === 'NA' ? 'NA' : afe.toFixed(3) + "%";
         document.getElementById("afe-ci").innerText = afe === 'NA' ? 'NA' : `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
         document.getElementById("paf-result").innerText = paf === 'NA' ? 'NA' : (paf * 100).toFixed(3) + "%";
-        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
+        document.getElementById("paf-ci").innerText = paf === 'NA' ? 'NA' : `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
         document.getElementById("results-container").style.display = "block";
     }
 </script>
