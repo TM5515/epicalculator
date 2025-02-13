@@ -116,7 +116,7 @@
         <div id="results-container" class="results-container">
             <div class="results-box"><h3>📌 Relative Risk & 95% CI</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
             <div class="results-box"><h3>📌 Risk Difference & 95% CI</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Attributable Fraction in Exposed & 95% CI</h3><p><strong>AFE:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction (AF<sub>e</sub>) & 95% CI</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
             <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
             <div class="results-box"><h3>📌 Population Attributable Risk & 95% CI</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
         </div>
@@ -152,8 +152,8 @@
         document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
-        document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
-        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
+        document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
+        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
         document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
         document.getElementById("results-container").style.display = "block";
     }
