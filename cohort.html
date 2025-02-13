@@ -133,25 +133,36 @@
             return;
         }
         
+        let total_sample = a + b + c + d;
+        let total_disease_positive = a + c;
+        let total_unexposed = c + d;
+        
         let riskExposed = a / (a + b);
         let riskUnexposed = c / (c + d);
         let relativeRisk = riskExposed / riskUnexposed;
         let standardErrorRR = 1.96 * Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
         let lowerRR = relativeRisk / standardErrorRR;
         let upperRR = relativeRisk * standardErrorRR;
+        
         let riskDifference = riskExposed - riskUnexposed;
         let standardErrorRD = Math.sqrt(((riskExposed * (1 - riskExposed)) / (a + b)) + ((riskUnexposed * (1 - riskUnexposed)) / (c + d)));
         let lowerRD = riskDifference - 1.96 * standardErrorRD;
         let upperRD = riskDifference + 1.96 * standardErrorRD;
+        
         let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
         let lowerAFE = (1 - (1 / upperRR)) * 100;
         let upperAFE = (1 - (1 / lowerRR)) * 100;
-        let p_e = (a + c) / (a + b + c + d);
+        
+        let p_e = (a + c) / total_sample;
         let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
-        let populationAttributableRisk = populationAttributableFraction * riskDifference;
-        let standardErrorPAR = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
-        let lowerPAR = populationAttributableRisk - 1.96 * standardErrorPAR;
-        let upperPAR = populationAttributableRisk + 1.96 * standardErrorPAR;
+        let standardErrorPAF = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
+        let lowerPAF = populationAttributableFraction - 1.96 * standardErrorPAF;
+        let upperPAF = populationAttributableFraction + 1.96 * standardErrorPAF;
+        
+        let PAR = riskExposed - riskUnexposed;
+        let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
+        let lowerPAR = PAR - 1.96 * SE_PAR;
+        let upperPAR = PAR + 1.96 * SE_PAR;
         
         document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
         document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
@@ -159,16 +170,15 @@
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
         document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
-        let standardErrorPAF = Math.sqrt(((a + c) * ((a + b + c + d) - (a + c))) / Math.pow(a + b + c + d, 3) + (c * ((c + d) - c)) / Math.pow(c + d, 3));
-        let lowerPAF = populationAttributableFraction - 1.96 * standardErrorPAF;
-        let upperPAF = populationAttributableFraction + 1.96 * standardErrorPAF;
-        
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
         document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
-        document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
+        document.getElementById("par-result").innerText = PAR.toFixed(3);
+        document.getElementById("par-ci").innerText = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
+        
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
     <a href="index.html" class="back">⬅ Back to Home</a>
 </body>
 </html>
