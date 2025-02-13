@@ -89,11 +89,6 @@
             font-size: 18px;
             color: #333;
         }
-        .results-box p {
-            font-size: 16px;
-            color: #444;
-            margin: 8px 0;
-        }
     </style>
 </head>
 <body>
@@ -141,13 +136,20 @@
         let riskExposed = a / (a + b);
         let riskUnexposed = c / (c + d);
         let relativeRisk = riskExposed / riskUnexposed;
+        let standardErrorRR = 1.96 * Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerRR = relativeRisk / standardErrorRR;
+        let upperRR = relativeRisk * standardErrorRR;
         let riskDifference = riskExposed - riskUnexposed;
+        let standardErrorRD = Math.sqrt(((riskExposed * (1 - riskExposed)) / (a + b)) + ((riskUnexposed * (1 - riskUnexposed)) / (c + d)));
+        let lowerRD = riskDifference - 1.96 * standardErrorRD;
+        let upperRD = riskDifference + 1.96 * standardErrorRD;
         let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk) * 100;
         let p_e = (a + c) / (a + b + c + d);
         let populationAttributableFraction = (p_e * (relativeRisk - 1)) / (1 + p_e * (relativeRisk - 1)) * 100;
         let populationAttributableRisk = populationAttributableFraction * riskDifference;
         
         document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
+        document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
@@ -157,3 +159,4 @@
 </script>
 </body>
 </html>
+
