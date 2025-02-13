@@ -138,13 +138,13 @@
         let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
         let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
         let attributableFractionExposed = ((prevalenceRatio - 1) / prevalenceRatio) * 100;
-        let lowerAFE = ((prevalenceRatio - 1) / prevalenceRatio) - 1.96 * standardErrorPR;
-        let upperAFE = ((prevalenceRatio - 1) / prevalenceRatio) + 1.96 * standardErrorPR;
+        let lowerAFE = (1 - (1 / upperPR)) * 100;
+        let upperAFE = (1 - (1 / lowerPR)) * 100;
         
         document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(3);
         document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(3)} – ${upperPR.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
-        document.getElementById("afe-ci").innerText = `(${(lowerAFE * 100).toFixed(3)}% – ${(upperAFE * 100).toFixed(3)}%)`;
+        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
         document.getElementById("results-container").style.display = "block";
     }
 </script>
