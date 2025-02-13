@@ -132,17 +132,11 @@
         }
         
         let prevalenceRatio = (a / (a + b)) / (c / (c + d));
-        let lnPR = Math.log(prevalenceRatio);
-        let standardErrorPR = Math.sqrt(1 / a + 1 / b + 1 / c + 1 / d);
-        let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
-        let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
         let paf = ((prevalenceRatio - 1) / prevalenceRatio) * (a / (a + c)) * 100;
         let standardErrorPAF = (b + (paf * (a + d))) / (totalSample * c);
-        let lowerPAF = paf - 1.96 * standardErrorPAF;
-        let upperPAF = paf + 1.96 * standardErrorPAF;
+        let lowerPAF = (1 - Math.exp(Math.log(1 - paf / 100) + 1.96 * Math.sqrt(standardErrorPAF))) * 100;
+        let upperPAF = (1 - Math.exp(Math.log(1 - paf / 100) - 1.96 * Math.sqrt(standardErrorPAF))) * 100;
         
-        document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(3);
-        document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(3)} – ${upperPR.toFixed(3)})`;
         document.getElementById("paf-result").innerText = paf.toFixed(3) + "%";
         document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
         document.getElementById("results-container").style.display = "block";
