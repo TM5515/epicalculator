@@ -122,7 +122,7 @@
         </div>
     </div>
 
-    <script>
+  <script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
         let b = parseFloat(document.getElementById("b").value);
@@ -178,7 +178,7 @@
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = (attributableFractionExposed * 100).toFixed(3);
-        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
+        document.getElementById("afe-ci").innerText = `(${upperAFE.toFixed(3)} – ${lowerAFE.toFixed(3)})`;
         document.getElementById("paf-result").innerText = (populationAttributableFraction * 100).toFixed(3);
         document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
         document.getElementById("par-result").innerText = PAR.toFixed(3);
