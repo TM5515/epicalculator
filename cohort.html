@@ -157,6 +157,10 @@
         let PAR = risk_total - risk_unexposed;
         let populationAttributableFraction = (PAR / (total_disease_positive / total_sample)) * 100;
         
+        let SE_PAF = Math.sqrt((b + (populationAttributableFraction * (a + d))) / (total_sample * c));
+        let lowerPAF = populationAttributableFraction - 1.96 * SE_PAF;
+        let upperPAF = populationAttributableFraction + 1.96 * SE_PAF;
+        
         let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
         let lowerPAR = PAR - 1.96 * SE_PAR;
         let upperPAR = PAR + 1.96 * SE_PAR;
@@ -166,16 +170,15 @@
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3);
-        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
+        document.getElementById("afe-ci").innerText = `(${lowerAFE.toFixed(3)} – ${upperAFE.toFixed(3)})`;
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3);
-        document.getElementById("paf-ci").innerText = `(${(populationAttributableFraction - 1.96 * SE_PAR).toFixed(3)}% – ${(populationAttributableFraction + 1.96 * SE_PAR).toFixed(3)}%)`;
+        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
         document.getElementById("par-result").innerText = PAR.toFixed(3);
         document.getElementById("par-ci").innerText = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
         
         document.getElementById("results-container").style.display = "block";
     }
 </script>
-
 
     <a href="index.html" class="back">⬅ Back to Home</a>
 </body>
