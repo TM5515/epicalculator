@@ -56,7 +56,6 @@
             display: block;
             width: 100%;
             padding: 12px;
-            text-decoration: none;
             color: white;
             background-color: #28A745;
             border: none;
@@ -89,11 +88,6 @@
             font-size: 18px;
             color: #333;
         }
-        .results-box p {
-            font-size: 16px;
-            color: #444;
-            margin: 8px 0;
-        }
     </style>
 </head>
 <body>
@@ -121,7 +115,7 @@
         <div id="results-container" class="results-container">
             <div class="results-box"><h3>📌 Prevalence Ratio & 95% CI</h3><p><strong>PR:</strong> <span id="pr-result"></span></p><p><strong>95% CI for PR:</strong> <span id="pr-ci"></span></p></div>
             <div class="results-box"><h3>📌 Attributable Fraction in Exposed & 95% CI</h3><p><strong>AFE:</strong> <span id="afe-result"></span></p><p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p><strong>PAF:</strong> <span id="paf-result"></span></p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Population Attributable Fraction & 95% CI</h3><p><strong>PAF:</strong> <span id="paf-result"></span></p></div>
         </div>
     </div>
 <script>
@@ -139,18 +133,13 @@
         let prevExposed = a / (a + b);
         let prevUnexposed = c / (c + d);
         let prevalenceRatio = prevExposed / prevUnexposed;
-        let lnPR = Math.log(prevalenceRatio);
         let standardErrorPR = Math.sqrt(1 / a + 1 / b + 1 / c + 1 / d);
-        let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
-        let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
+        let lowerAFE = ((prevalenceRatio - 1) / prevalenceRatio) - 1.96 * standardErrorPR;
+        let upperAFE = ((prevalenceRatio - 1) / prevalenceRatio) + 1.96 * standardErrorPR;
         let attributableFractionExposed = ((prevalenceRatio - 1) / prevalenceRatio) * 100;
-        let p_e = (a + c) / (a + b + c + d);
-        let populationAttributableFraction = (p_e * (prevalenceRatio - 1)) / (1 + p_e * (prevalenceRatio - 1)) * 100;
-
-        document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(3);
-        document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(3)} – ${upperPR.toFixed(3)})`;
+        
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
-        document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
+        document.getElementById("afe-ci").innerText = `(${(lowerAFE * 100).toFixed(3)}% – ${(upperAFE * 100).toFixed(3)}%)`;
         document.getElementById("results-container").style.display = "block";
     }
 </script>
