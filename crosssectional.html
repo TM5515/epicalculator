@@ -138,8 +138,8 @@
         let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
         let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
         let attributableFractionExposed = ((prevalenceRatio - 1) / prevalenceRatio) * 100;
-        let lowerAFE = (1 - (1 / upperPR)) * 100;
-        let upperAFE = (1 - (1 / lowerPR)) * 100;
+        let lowerAFE = (1 - (1 / lowerPR)) * 100;
+        let upperAFE = (1 - (1 / upperPR)) * 100;
         
         document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(3);
         document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(3)} – ${upperPR.toFixed(3)})`;
