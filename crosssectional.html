@@ -143,15 +143,15 @@
         let upperAFE = prevalenceRatio >= 1 ? (1 - (1 / upperPR)) * 100 : 'N/A';
         let paf = prevalenceRatio >= 1 ? ((prevalenceRatio - 1) / prevalenceRatio) * (a / (a + c)) : 'N/A';
         let standardErrorPAF = (b + (paf * (a + d))) / (totalSample * c);
-        let lowerPAF = (1 - Math.exp(Math.log(1 - paf) + 1.96 * Math.sqrt(standardErrorPAF))) * 100;
-        let upperPAF = (1 - Math.exp(Math.log(1 - paf) - 1.96 * Math.sqrt(standardErrorPAF))) * 100;
+        let lowerPAF = paf === 'N/A' ? 'N/A' : (1 - Math.exp(Math.log(1 - paf) + 1.96 * Math.sqrt(standardErrorPAF))) * 100;
+        let upperPAF = paf === 'N/A' ? 'N/A' : (1 - Math.exp(Math.log(1 - paf) - 1.96 * Math.sqrt(standardErrorPAF))) * 100;
         
         document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(3);
         document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(3)} – ${upperPR.toFixed(3)})`;
         document.getElementById("afe-result").innerText = afe === 'N/A' ? 'N/A' : afe.toFixed(3) + "%";
         document.getElementById("afe-ci").innerText = afe === 'N/A' ? 'N/A' : `(${lowerAFE.toFixed(3)}% – ${upperAFE.toFixed(3)}%)`;
-        document.getElementById("paf-result").innerText = paf === 'NA' ? 'NA' : (paf * 100).toFixed(3) + "%";
-        document.getElementById("paf-ci").innerText = paf === 'NA' ? 'NA' : `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
+        document.getElementById("paf-result").innerText = paf === 'N/A' ? 'N/A' : (paf * 100).toFixed(3) + "%";
+        document.getElementById("paf-ci").innerText = paf === 'N/A' ? 'N/A' : `(${lowerPAF.toFixed(3)}% – ${upperPAF.toFixed(3)}%)`;
         document.getElementById("results-container").style.display = "block";
     }
 </script>
