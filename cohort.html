@@ -141,9 +141,9 @@
         let risk_unexposed = c / total_unexposed;
         
         let relativeRisk = (a / (a + b)) / (c / (c + d));
-        let standardErrorRR = 1.96 * Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
-        let lowerRR = relativeRisk / standardErrorRR;
-        let upperRR = relativeRisk * standardErrorRR;
+        let standardErrorRR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerRR = relativeRisk / Math.exp(1.96 * standardErrorRR);
+        let upperRR = relativeRisk * Math.exp(1.96 * standardErrorRR);
         
         let riskDifference = (a / (a + b)) - (c / (c + d));
         let standardErrorRD = Math.sqrt(((a / (a + b)) * (1 - (a / (a + b))) / (a + b)) + ((c / (c + d)) * (1 - (c / (c + d))) / (c + d)));
@@ -152,9 +152,8 @@
         
         let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
         
-        let SE_AFE = Math.sqrt((1 / a) - (1 / (a + b)));
-        let lowerAFE = 1 - Math.exp(Math.log(1 - attributableFractionExposed) + (1.96 * SE_AFE));
-        let upperAFE = 1 - Math.exp(Math.log(1 - attributableFractionExposed) - (1.96 * SE_AFE));
+        let lowerAFE = 1 - 1 / (relativeRisk * standardErrorRR);
+        let upperAFE = 1 - 1 / (relativeRisk / standardErrorRR);
         
         lowerAFE = Math.max(0, lowerAFE) * 100;
         upperAFE = Math.min(100, upperAFE) * 100;
@@ -188,6 +187,7 @@
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
 
     <a href="index.html" class="back">⬅ Back to Home</a>
