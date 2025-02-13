@@ -151,6 +151,7 @@
         document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
         document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
+        document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
         document.getElementById("afe-result").innerText = attributableFractionExposed.toFixed(3) + "%";
         document.getElementById("paf-result").innerText = populationAttributableFraction.toFixed(3) + "%";
         document.getElementById("par-result").innerText = populationAttributableRisk.toFixed(3);
@@ -159,4 +160,3 @@
 </script>
 </body>
 </html>
-
