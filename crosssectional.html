@@ -139,8 +139,8 @@
         let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
         let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
         let afe = (1 - (1 / prevalenceRatio)) * 100;
-        let lowerAFE = (1 - (1 / upperPR)) * 100;
-        let upperAFE = (1 - (1 / lowerPR)) * 100;
+        let lowerAFE = (1 - (1 / lowerPR)) * 100;
+        let upperAFE = (1 - (1 / upperPR)) * 100;
         let paf = ((prevalenceRatio - 1) / prevalenceRatio) * (a / (a + c));
         let standardErrorPAF = (b + (paf * (a + d))) / (totalSample * c);
         let lowerPAF = (1 - Math.exp(Math.log(1 - paf) + 1.96 * Math.sqrt(standardErrorPAF))) * 100;
@@ -157,3 +157,4 @@
 </script>
 </body>
 </html>
+
