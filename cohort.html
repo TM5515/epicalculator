@@ -122,7 +122,7 @@
         </div>
     </div>
 
-  <script>
+<script>
     function calculateResults() {
         let a = parseFloat(document.getElementById("a").value);
         let b = parseFloat(document.getElementById("b").value);
@@ -151,42 +151,58 @@
         let lowerRD = riskDifference - 1.96 * standardErrorRD;
         let upperRD = riskDifference + 1.96 * standardErrorRD;
         
-        let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
-        let lowerAFE = 1 - (1 / upperRR);
-        let upperAFE = 1 - (1 / lowerRR);
-        
-        lowerAFE = Math.max(0, lowerAFE) * 100;
-        upperAFE = Math.min(100, upperAFE) * 100;
-        
-        let PAR = risk_total - risk_unexposed;
-        let populationAttributableFraction = (PAR / (total_disease_positive / total_sample));
-        
-        let SE_PAF = Math.sqrt((b + (populationAttributableFraction * (a + d))) / (total_sample * c));
-        
-        let lowerPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) + (1.96 * SE_PAF));
-        let upperPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) - (1.96 * SE_PAF));
-        
-        lowerPAF = Math.max(0, lowerPAF) * 100;
-        upperPAF = Math.min(100, upperPAF) * 100;
-        
-        let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
-        let lowerPAR = PAR - 1.96 * SE_PAR;
-        let upperPAR = PAR + 1.96 * SE_PAR;
+        let afeResult = "N/A";
+        let afeCI = "N/A";
+        let pafResult = "N/A";
+        let pafCI = "N/A";
+        let parResult = "N/A";
+        let parCI = "N/A";
+
+        if (relativeRisk >= 1) {
+            let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
+            let lowerAFE = 1 - (1 / upperRR);
+            let upperAFE = 1 - (1 / lowerRR);
+            
+            lowerAFE = Math.max(0, lowerAFE) * 100;
+            upperAFE = Math.min(100, upperAFE) * 100;
+            afeResult = (attributableFractionExposed * 100).toFixed(3);
+            afeCI = `(${upperAFE.toFixed(3)} – ${lowerAFE.toFixed(3)})`;
+            
+            let PAR = risk_total - risk_unexposed;
+            let populationAttributableFraction = (PAR / (total_disease_positive / total_sample));
+            
+            let SE_PAF = Math.sqrt((b + (populationAttributableFraction * (a + d))) / (total_sample * c));
+            
+            let lowerPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) + (1.96 * SE_PAF));
+            let upperPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) - (1.96 * SE_PAF));
+            
+            lowerPAF = Math.max(0, lowerPAF) * 100;
+            upperPAF = Math.min(100, upperPAF) * 100;
+            pafResult = (populationAttributableFraction * 100).toFixed(3);
+            pafCI = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
+            
+            let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
+            let lowerPAR = PAR - 1.96 * SE_PAR;
+            let upperPAR = PAR + 1.96 * SE_PAR;
+            parResult = PAR.toFixed(3);
+            parCI = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
+        }
         
         document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
         document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
         document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
-        document.getElementById("afe-result").innerText = (attributableFractionExposed * 100).toFixed(3);
-        document.getElementById("afe-ci").innerText = `(${upperAFE.toFixed(3)} – ${lowerAFE.toFixed(3)})`;
-        document.getElementById("paf-result").innerText = (populationAttributableFraction * 100).toFixed(3);
-        document.getElementById("paf-ci").innerText = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
-        document.getElementById("par-result").innerText = PAR.toFixed(3);
-        document.getElementById("par-ci").innerText = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
+        document.getElementById("afe-result").innerText = afeResult;
+        document.getElementById("afe-ci").innerText = afeCI;
+        document.getElementById("paf-result").innerText = pafResult;
+        document.getElementById("paf-ci").innerText = pafCI;
+        document.getElementById("par-result").innerText = parResult;
+        document.getElementById("par-ci").innerText = parCI;
         
         document.getElementById("results-container").style.display = "block";
     }
 </script>
+
 
 
 
