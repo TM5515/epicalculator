@@ -165,8 +165,8 @@
             
             lowerAFE = Math.max(0, lowerAFE) * 100;
             upperAFE = Math.min(100, upperAFE) * 100;
-            afeResult = (attributableFractionExposed * 100).toFixed(3);
-            afeCI = `(${upperAFE.toFixed(3)} – ${lowerAFE.toFixed(3)})`;
+            afeResult = (attributableFractionExposed * 100).toFixed(4);
+            afeCI = `(${upperAFE.toFixed(4)} – ${lowerAFE.toFixed(4)})`;
             
             let PAR = risk_total - risk_unexposed;
             let populationAttributableFraction = (PAR / (total_disease_positive / total_sample));
@@ -178,20 +178,20 @@
             
             lowerPAF = Math.max(0, lowerPAF) * 100;
             upperPAF = Math.min(100, upperPAF) * 100;
-            pafResult = (populationAttributableFraction * 100).toFixed(3);
-            pafCI = `(${lowerPAF.toFixed(3)} – ${upperPAF.toFixed(3)})`;
+            pafResult = (populationAttributableFraction * 100).toFixed(4);
+            pafCI = `(${lowerPAF.toFixed(4)} – ${upperPAF.toFixed(4)})`;
             
             let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
             let lowerPAR = PAR - 1.96 * SE_PAR;
             let upperPAR = PAR + 1.96 * SE_PAR;
-            parResult = PAR.toFixed(3);
-            parCI = `(${lowerPAR.toFixed(3)} – ${upperPAR.toFixed(3)})`;
+            parResult = PAR.toFixed(4);
+            parCI = `(${lowerPAR.toFixed(4)} – ${upperPAR.toFixed(4)})`;
         }
         
-        document.getElementById("rr-result").innerText = relativeRisk.toFixed(3);
-        document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(3)} – ${upperRR.toFixed(3)})`;
-        document.getElementById("rd-result").innerText = riskDifference.toFixed(3);
-        document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(3)} – ${upperRD.toFixed(3)})`;
+        document.getElementById("rr-result").innerText = relativeRisk.toFixed(4);
+        document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(4)} – ${upperRR.toFixed(4)})`;
+        document.getElementById("rd-result").innerText = riskDifference.toFixed(4);
+        document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(4)} – ${upperRD.toFixed(4)})`;
         document.getElementById("afe-result").innerText = afeResult;
         document.getElementById("afe-ci").innerText = afeCI;
         document.getElementById("paf-result").innerText = pafResult;
