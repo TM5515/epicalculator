@@ -211,17 +211,17 @@
             upperPAF *= 100;
 
             // Ensure all results are rounded to three decimal places
-            attributableFractionExposed = attributableFractionExposed.toFixed(3);
-            lowerAFE = lowerAFE.toFixed(3);
-            upperAFE = upperAFE.toFixed(3);
-            populationAttributableFraction = populationAttributableFraction.toFixed(3);
-            lowerPAF = lowerPAF.toFixed(3);
-            upperPAF = upperPAF.toFixed(3);
+            attributableFractionExposed = attributableFractionExposed.toFixed(4);
+            lowerAFE = lowerAFE.toFixed(4);
+            upperAFE = upperAFE.toFixed(4);
+            populationAttributableFraction = populationAttributableFraction.toFixed(4);
+            lowerPAF = lowerPAF.toFixed(4);
+            upperPAF = upperPAF.toFixed(4);
         }
 
         // Display results
-        document.getElementById("or-result").innerText = oddsRatio.toFixed(3);
-        document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(3)} – ${upperOR.toFixed(3)})`;
+        document.getElementById("or-result").innerText = oddsRatio.toFixed(4);
+        document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(4)} – ${upperOR.toFixed(4)})`;
 
         document.getElementById("afe-result").innerText = attributableFractionExposed;
         document.getElementById("afe-ci").innerText = `(${lowerAFE} – ${upperAFE})`;
