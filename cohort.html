@@ -113,102 +113,103 @@
             </tr>
         </table>
         <button class="button" onclick="calculateResults()">Calculate</button>
-  <div id="results-container" class="results-container">
-    <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>)</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
-    <div class="results-box"><h3>📌 Population Attributable Risk</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
-    <div class="results-box"><h3>📌 Population Attributable Fraction</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
-    <div class="results-box"><h3>📌 Relative Risk</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
-    <div class="results-box"><h3>📌 Risk Difference</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
-</div>
+        <div id="results-container" class="results-container">
+            <div class="results-box"><h3>📌 Relative Risk</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Risk Difference</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>)</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Population Attributable Risk</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Population Attributable Fraction</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
+        </div>
     </div>
 
 <script>
-   function calculateResults() {
-    let a = parseFloat(document.getElementById("a").value);
-    let b = parseFloat(document.getElementById("b").value);
-    let c = parseFloat(document.getElementById("c").value);
-    let d = parseFloat(document.getElementById("d").value);
+    function calculateResults() {
+        let a = parseFloat(document.getElementById("a").value);
+        let b = parseFloat(document.getElementById("b").value);
+        let c = parseFloat(document.getElementById("c").value);
+        let d = parseFloat(document.getElementById("d").value);
 
-    if (!a || !b || !c || !d) {
-        alert("Please enter valid numbers.");
-        return;
+        if (!a || !b || !c || !d) {
+            alert("Please enter valid numbers.");
+            return;
+        }
+        
+        let total_sample = a + b + c + d;
+        let total_disease_positive = a + c;
+        let total_unexposed = c + d;
+        
+        let risk_total = total_disease_positive / total_sample;
+        let risk_unexposed = c / total_unexposed;
+        
+        let relativeRisk = (a / (a + b)) / (c / (c + d));
+        let SE_lnRR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerRR = relativeRisk * Math.exp(-1.96 * SE_lnRR);
+        let upperRR = relativeRisk * Math.exp(1.96 * SE_lnRR);
+        
+        let riskDifference = (a / (a + b)) - (c / (c + d));
+        let standardErrorRD = Math.sqrt(((a / (a + b)) * (1 - (a / (a + b))) / (a + b)) + ((c / (c + d)) * (1 - (c / (c + d))) / (c + d)));
+        let lowerRD = riskDifference - 1.96 * standardErrorRD;
+        let upperRD = riskDifference + 1.96 * standardErrorRD;
+        
+        let afeResult = "N/A";
+        let afeCI = "N/A";
+        let pafResult = "N/A";
+        let pafCI = "N/A";
+        let parResult = "N/A";
+        let parCI = "N/A";
+
+        if (relativeRisk >= 1) {
+            // Attributable Fraction in Exposed (AFE) calculation
+            let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
+            let lowerAFE = 1 - (1 / upperRR);
+            let upperAFE = 1 - (1 / lowerRR);
+            
+            lowerAFE = Math.max(0, lowerAFE) * 100;
+            upperAFE = Math.min(100, upperAFE) * 100;
+            afeResult = (attributableFractionExposed * 100).toFixed(4);
+            afeCI = `(${upperAFE.toFixed(4)} – ${lowerAFE.toFixed(4)})`;
+            
+            // Population Attributable Risk (PAR) calculation
+            let PAR = risk_total - risk_unexposed;
+            let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
+            let lowerPAR = PAR - 1.96 * SE_PAR;
+            let upperPAR = PAR + 1.96 * SE_PAR;
+            parResult = PAR.toFixed(4);
+            parCI = `(${lowerPAR.toFixed(4)} – ${upperPAR.toFixed(4)})`;
+            
+            // Population Attributable Fraction (PAF) calculation
+            let populationAttributableFraction = (PAR / (total_disease_positive / total_sample));
+            
+            let SE_PAF = Math.sqrt((b + (populationAttributableFraction * (a + d))) / (total_sample * c));
+            
+            let lowerPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) + (1.96 * SE_PAF));
+            let upperPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) - (1.96 * SE_PAF));
+            
+            lowerPAF = Math.max(0, lowerPAF) * 100;
+            upperPAF = Math.min(100, upperPAF) * 100;
+            pafResult = (populationAttributableFraction * 100).toFixed(4);
+            pafCI = `(${lowerPAF.toFixed(4)} – ${upperPAF.toFixed(4)})`;
+        }
+        
+        // Now update the results in the correct order
+        document.getElementById("rr-result").innerText = relativeRisk.toFixed(4);
+        document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(4)} – ${upperRR.toFixed(4)})`;
+        
+        document.getElementById("rd-result").innerText = riskDifference.toFixed(4);
+        document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(4)} – ${upperRD.toFixed(4)})`;
+        
+        document.getElementById("afe-result").innerText = afeResult;
+        document.getElementById("afe-ci").innerText = afeCI;
+        
+        document.getElementById("par-result").innerText = parResult;
+        document.getElementById("par-ci").innerText = parCI;
+        
+        document.getElementById("paf-result").innerText = pafResult;
+        document.getElementById("paf-ci").innerText = pafCI;
+
+        document.getElementById("results-container").style.display = "block";
     }
-    
-    let total_sample = a + b + c + d;
-    let total_disease_positive = a + c;
-    let total_unexposed = c + d;
-    
-    let risk_total = total_disease_positive / total_sample;
-    let risk_unexposed = c / total_unexposed;
-    
-    let relativeRisk = (a / (a + b)) / (c / (c + d));
-    let SE_lnRR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
-    let lowerRR = relativeRisk * Math.exp(-1.96 * SE_lnRR);
-    let upperRR = relativeRisk * Math.exp(1.96 * SE_lnRR);
-    
-    let riskDifference = (a / (a + b)) - (c / (c + d));
-    let standardErrorRD = Math.sqrt(((a / (a + b)) * (1 - (a / (a + b))) / (a + b)) + ((c / (c + d)) * (1 - (c / (c + d))) / (c + d)));
-    let lowerRD = riskDifference - 1.96 * standardErrorRD;
-    let upperRD = riskDifference + 1.96 * standardErrorRD;
-    
-    let afeResult = "N/A";
-    let afeCI = "N/A";
-    let pafResult = "N/A";
-    let pafCI = "N/A";
-    let parResult = "N/A";
-    let parCI = "N/A";
-
-    if (relativeRisk >= 1) {
-        // Attributable Fraction in Exposed (AFE) calculation
-        let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
-        let lowerAFE = 1 - (1 / upperRR);
-        let upperAFE = 1 - (1 / lowerRR);
-        
-        lowerAFE = Math.max(0, lowerAFE) * 100;
-        upperAFE = Math.min(100, upperAFE) * 100;
-        afeResult = (attributableFractionExposed * 100).toFixed(4);
-        afeCI = `(${upperAFE.toFixed(4)} – ${lowerAFE.toFixed(4)})`;
-        
-        // Population Attributable Risk (PAR) calculation
-        let PAR = risk_total - risk_unexposed;
-        let SE_PAR = Math.sqrt(((total_disease_positive * (total_sample - total_disease_positive)) / Math.pow(total_sample, 3)) + ((c * (total_unexposed - c)) / Math.pow(total_unexposed, 3)));
-        let lowerPAR = PAR - 1.96 * SE_PAR;
-        let upperPAR = PAR + 1.96 * SE_PAR;
-        parResult = PAR.toFixed(4);
-        parCI = `(${lowerPAR.toFixed(4)} – ${upperPAR.toFixed(4)})`;
-        
-        // Population Attributable Fraction (PAF) calculation
-        let populationAttributableFraction = (PAR / (total_disease_positive / total_sample));
-        
-        let SE_PAF = Math.sqrt((b + (populationAttributableFraction * (a + d))) / (total_sample * c));
-        
-        let lowerPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) + (1.96 * SE_PAF));
-        let upperPAF = 1 - Math.exp(Math.log(1 - populationAttributableFraction) - (1.96 * SE_PAF));
-        
-        lowerPAF = Math.max(0, lowerPAF) * 100;
-        upperPAF = Math.min(100, upperPAF) * 100;
-        pafResult = (populationAttributableFraction * 100).toFixed(4);
-        pafCI = `(${lowerPAF.toFixed(4)} – ${upperPAF.toFixed(4)})`;
-    }
-    
-    // Now update the results in the correct order
-    document.getElementById("afe-result").innerText = afeResult;
-    document.getElementById("afe-ci").innerText = afeCI;
-    document.getElementById("par-result").innerText = parResult;
-    document.getElementById("par-ci").innerText = parCI;
-    document.getElementById("paf-result").innerText = pafResult;
-    document.getElementById("paf-ci").innerText = pafCI;
-    document.getElementById("rr-result").innerText = relativeRisk.toFixed(4);
-    document.getElementById("rr-ci").innerText = `(${lowerRR.toFixed(4)} – ${upperRR.toFixed(4)})`;
-    document.getElementById("rd-result").innerText = riskDifference.toFixed(4);
-    document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(4)} – ${upperRD.toFixed(4)})`;
-
-    document.getElementById("results-container").style.display = "block";
-}
 </script>
-
-
-
 
     <a href="index.html" class="back">⬅ Back to Home</a>
 </body>
