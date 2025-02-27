@@ -113,9 +113,24 @@
         </table>
         <button class="button" onclick="calculateResults()">Calculate</button>
         <div id="results-container" class="results-container">
-            <div class="results-box"><h3>📌 Prevalence Ratio </h3><p><strong>PR:</strong> <span id="pr-result"></span></p><p><strong>95% CI for PR:</strong> <span id="pr-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>) </h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span></p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Population Attributable Fraction (PAF) </h3><p><strong>PAF:</strong> <span id="paf-result"></span></p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p></div>
+            <div class="results-box">
+                <h3>📌 Prevalence Ratio</h3>
+                <p><strong>PR:</strong> <span id="pr-result"></span></p>
+                <p><strong>95% CI for PR:</strong> <span id="pr-ci"></span></p>
+            </div>
+            <div class="results-box">
+                <h3>📌 Odds Ratio</h3>
+                <p><strong>OR:</strong> <span id="or-result"></span></p>
+                <p><strong>95% CI for OR:</strong> <span id="or-ci"></span></p>
+            </div>
+            <div class="results-box">
+                <h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>)</h3>
+                <p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span></p>
+            </div>
+            <div class="results-box">
+                <h3>📌 Population Attributable Fraction (PAF)</h3>
+                <p><strong>PAF:</strong> <span id="paf-result"></span></p>
+            </div>
         </div>
     </div>
 <script>
@@ -124,36 +139,43 @@
         let b = parseFloat(document.getElementById("b").value);
         let c = parseFloat(document.getElementById("c").value);
         let d = parseFloat(document.getElementById("d").value);
-        let totalSample = a + b + c + d;
 
         if (!a || !b || !c || !d) {
             alert("Please enter valid numbers.");
             return;
         }
-        
-        let prevExposed = a / (a + b);
-        let prevUnexposed = c / (c + d);
-        let prevalenceRatio = prevExposed / prevUnexposed;
-        let lnPR = Math.log(prevalenceRatio);
-        let standardErrorPR = Math.sqrt(1 / a + 1 / b + 1 / c + 1 / d);
-        let lowerPR = Math.exp(lnPR - 1.96 * standardErrorPR);
-        let upperPR = Math.exp(lnPR + 1.96 * standardErrorPR);
-        let afe = prevalenceRatio >= 1 ? (1 - (1 / prevalenceRatio)) * 100 : 'N/A';
-        let lowerAFE = prevalenceRatio >= 1 ? (1 - (1 / lowerPR)) * 100 : 'N/A';
-        let upperAFE = prevalenceRatio >= 1 ? (1 - (1 / upperPR)) * 100 : 'N/A';
-        let paf = prevalenceRatio >= 1 ? ((prevalenceRatio - 1) / prevalenceRatio) * (a / (a + c)) : 'N/A';
-        let standardErrorPAF = (b + (paf * (a + d))) / (totalSample * c);
-        let lowerPAF = paf === 'N/A' ? 'N/A' : (1 - Math.exp(Math.log(1 - paf) + 1.96 * Math.sqrt(standardErrorPAF))) * 100;
-        let upperPAF = paf === 'N/A' ? 'N/A' : (1 - Math.exp(Math.log(1 - paf) - 1.96 * Math.sqrt(standardErrorPAF))) * 100;
-        
-        document.getElementById("pr-result").innerText = prevalenceRatio.toFixed(4);
+
+        // Calculate Prevalence Ratio (PR)
+        let pr = (a / (a + b)) / (c / (c + d));
+        let lnPR = Math.log(pr);
+        let sePR = Math.sqrt((1 / a) - (1 / (a + b)) + (1 / c) - (1 / (c + d)));
+        let lowerPR = Math.exp(lnPR - 1.96 * sePR);
+        let upperPR = Math.exp(lnPR + 1.96 * sePR);
+
+        document.getElementById("pr-result").innerText = pr.toFixed(4);
         document.getElementById("pr-ci").innerText = `(${lowerPR.toFixed(4)} – ${upperPR.toFixed(4)})`;
-        document.getElementById("afe-result").innerText = afe === 'N/A' ? 'N/A' : afe.toFixed(4) + "%";
-        document.getElementById("afe-ci").innerText = afe === 'N/A' ? 'N/A' : `(${lowerAFE.toFixed(4)}% – ${upperAFE.toFixed(4)}%)`;
-        document.getElementById("paf-result").innerText = paf === 'N/A' ? 'N/A' : (paf * 100).toFixed(4) + "%";
-        document.getElementById("paf-ci").innerText = paf === 'N/A' ? 'N/A' : `(${lowerPAF.toFixed(4)}% – ${upperPAF.toFixed(4)}%)`;
+
+        // Calculate Odds Ratio (OR)
+        let or = (a * d) / (b * c);
+        let lnOR = Math.log(or);
+        let seOR = Math.sqrt(1 / a + 1 / b + 1 / c + 1 / d);
+        let lowerOR = Math.exp(lnOR - 1.96 * seOR);
+        let upperOR = Math.exp(lnOR + 1.96 * seOR);
+
+        document.getElementById("or-result").innerText = or.toFixed(4);
+        document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(4)} – ${upperOR.toFixed(4)})`;
+
+        // Calculate Attributable Fraction in Exposed (AFₑ)
+        let afe = (pr - 1) / pr;
+        document.getElementById("afe-result").innerText = (afe * 100).toFixed(2) + "%";
+
+        // Calculate Population Attributable Fraction (PAF)
+        let paf = ((a / (a + b)) * (pr - 1)) / (((a / (a + b)) * (pr - 1)) + 1);
+        document.getElementById("paf-result").innerText = (paf * 100).toFixed(2) + "%";
+
         document.getElementById("results-container").style.display = "block";
     }
+
 </script>
     <a href="index.html" class="back">⬅ Back to Home</a>
 </body>
