@@ -116,7 +116,7 @@
         <div id="results-container" class="results-container">
             <div class="results-box"><h3>📌 Relative Risk</h3><p><strong>RR:</strong> <span id="rr-result"></span></p><p><strong>95% CI for RR:</strong> <span id="rr-ci"></span></p></div>
             <div class="results-box"><h3>📌 Risk Difference</h3><p><strong>RD:</strong> <span id="rd-result"></span></p><p><strong>95% CI for RD:</strong> <span id="rd-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>)</h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span>%</p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span>%</p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF)</h3><p><strong>AF:</strong> <span id="AF-result"></span>%</p><p><strong>95% CI for AF:</strong> <span id="AF-ci"></span>%</p></div>
             <div class="results-box"><h3>📌 Population Attributable Risk</h3><p><strong>PAR:</strong> <span id="par-result"></span></p><p><strong>95% CI for PAR:</strong> <span id="par-ci"></span></p></div>
             <div class="results-box"><h3>📌 Population Attributable Fraction</h3><p><strong>PAF:</strong> <span id="paf-result"></span>%</p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span>%</p></div>
         </div>
@@ -151,23 +151,23 @@
         let lowerRD = riskDifference - 1.96 * standardErrorRD;
         let upperRD = riskDifference + 1.96 * standardErrorRD;
         
-        let afeResult = "N/A";
-        let afeCI = "N/A";
+        let AFResult = "N/A";
+        let AFCI = "N/A";
         let pafResult = "N/A";
         let pafCI = "N/A";
         let parResult = "N/A";
         let parCI = "N/A";
 
         if (relativeRisk >= 1) {
-            // Attributable Fraction in Exposed (AFE) calculation
+            // Attributable Fraction in Exposed (AF) calculation
             let attributableFractionExposed = ((relativeRisk - 1) / relativeRisk);
-            let lowerAFE = 1 - (1 / upperRR);
-            let upperAFE = 1 - (1 / lowerRR);
+            let lowerAF = 1 - (1 / upperRR);
+            let upperAF = 1 - (1 / lowerRR);
             
-            lowerAFE = Math.max(0, lowerAFE) * 100;
-            upperAFE = Math.min(100, upperAFE) * 100;
-            afeResult = (attributableFractionExposed * 100).toFixed(4);
-            afeCI = `(${upperAFE.toFixed(4)} – ${lowerAFE.toFixed(4)})`;
+            lowerAF = Math.max(0, lowerAF) * 100;
+            upperAF = Math.min(100, upperAF) * 100;
+            AFResult = (attributableFractionExposed * 100).toFixed(4);
+            AFCI = `(${upperAF.toFixed(4)} – ${lowerAF.toFixed(4)})`;
             
             // Population Attributable Risk (PAR) calculation
             let PAR = risk_total - risk_unexposed;
@@ -198,8 +198,8 @@
         document.getElementById("rd-result").innerText = riskDifference.toFixed(4);
         document.getElementById("rd-ci").innerText = `(${lowerRD.toFixed(4)} – ${upperRD.toFixed(4)})`;
         
-        document.getElementById("afe-result").innerText = afeResult;
-        document.getElementById("afe-ci").innerText = afeCI;
+        document.getElementById("AF-result").innerText = AFResult;
+        document.getElementById("AF-ci").innerText = AFCI;
         
         document.getElementById("par-result").innerText = parResult;
         document.getElementById("par-ci").innerText = parCI;
