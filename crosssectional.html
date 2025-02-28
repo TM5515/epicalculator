@@ -124,7 +124,7 @@
         <div id="results-container" class="results-container">
             <div class="results-box"><h3>📌 Prevalence Ratio </h3><p><strong>PR:</strong> <span id="pr-result"></span></p><p><strong>95% CI for PR:</strong> <span id="pr-ci"></span></p></div>
             <div class="results-box"><h3>📌 Odds Ratio </h3><p><strong>OR:</strong> <span id="or-result"></span></p><p><strong>95% CI for OR:</strong> <span id="or-ci"></span></p></div>
-            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF<sub>e</sub>) </h3><p><strong>AF<sub>e</sub>:</strong> <span id="afe-result"></span></p><p><strong>95% CI for AF<sub>e</sub>:</strong> <span id="afe-ci"></span></p></div>
+            <div class="results-box"><h3>📌 Attributable Fraction in Exposed (AF) </h3><p><strong>AF:</strong> <span id="AF-result"></span></p><p><strong>95% CI for AF:</strong> <span id="AF-ci"></span></p></div>
             <div class="results-box"><h3>📌 Population Attributable Fraction </h3><p><strong>PAF:</strong> <span id="paf-result"></span></p><p><strong>95% CI for PAF:</strong> <span id="paf-ci"></span></p></div>
         </div>
     </div>
@@ -158,9 +158,9 @@
         let upperOR = Math.exp(lnOR + 1.96 * standardErrorOR);
         
         // Attributable Fraction calculations
-        let afe = prevalenceRatio >= 1 ? (1 - (1 / prevalenceRatio)) * 100 : 'N/A';
-        let lowerAFE = prevalenceRatio >= 1 ? (1 - (1 / lowerPR)) * 100 : 'N/A';
-        let upperAFE = prevalenceRatio >= 1 ? (1 - (1 / upperPR)) * 100 : 'N/A';
+        let AF = prevalenceRatio >= 1 ? (1 - (1 / prevalenceRatio)) * 100 : 'N/A';
+        let lowerAF = prevalenceRatio >= 1 ? (1 - (1 / lowerPR)) * 100 : 'N/A';
+        let upperAF = prevalenceRatio >= 1 ? (1 - (1 / upperPR)) * 100 : 'N/A';
         
         // Population Attributable Fraction calculations
         let paf = prevalenceRatio >= 1 ? ((prevalenceRatio - 1) / prevalenceRatio) * (a / (a + c)) : 'N/A';
@@ -175,8 +175,8 @@
         document.getElementById("or-result").innerText = oddsRatio.toFixed(4);
         document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(4)} – ${upperOR.toFixed(4)})`;
         
-        document.getElementById("afe-result").innerText = afe === 'N/A' ? 'N/A' : afe.toFixed(4) + "%";
-        document.getElementById("afe-ci").innerText = afe === 'N/A' ? 'N/A' : `(${lowerAFE.toFixed(4)}% – ${upperAFE.toFixed(4)}%)`;
+        document.getElementById("AF-result").innerText = AF === 'N/A' ? 'N/A' : AF.toFixed(4) + "%";
+        document.getElementById("AF-ci").innerText = AF === 'N/A' ? 'N/A' : `(${lowerAF.toFixed(4)}% – ${upperAF.toFixed(4)}%)`;
         
         document.getElementById("paf-result").innerText = paf === 'N/A' ? 'N/A' : (paf * 100).toFixed(4) + "%";
         document.getElementById("paf-ci").innerText = paf === 'N/A' ? 'N/A' : `(${lowerPAF.toFixed(4)}% – ${upperPAF.toFixed(4)}%)`;
