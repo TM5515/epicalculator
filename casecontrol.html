@@ -140,9 +140,9 @@
             </div>
 
             <div class="results-box">
-                <h3>📌 Attributable Fraction in Exposed (AFE)</h3>
-                <p><strong>AFE:</strong> <span id="afe-result"></span>%</p>
-                <p><strong>95% CI for AFE:</strong> <span id="afe-ci"></span>%</p>
+                <h3>📌 Attributable Fraction in Exposed (AF)</h3>
+                <p><strong>AF:</strong> <span id="AF-result"></span>%</p>
+                <p><strong>95% CI for AF:</strong> <span id="AF-ci"></span>%</p>
             </div>
 
             <div class="results-box">
@@ -176,20 +176,20 @@
         let lowerOR = Math.exp(lnOR - 1.96 * standardErrorOR);
         let upperOR = Math.exp(lnOR + 1.96 * standardErrorOR);
 
-        // Initialize AFE and PAF as "N/A" if OR < 1
+        // Initialize AF and PAF as "N/A" if OR < 1
         let attributableFractionExposed = "N/A";
-        let lowerAFE = "N/A";
-        let upperAFE = "N/A";
+        let lowerAF = "N/A";
+        let upperAF = "N/A";
         let populationAttributableFraction = "N/A";
         let lowerPAF = "N/A";
         let upperPAF = "N/A";
 
-        // Only calculate AFE and PAF if OR >= 1
+        // Only calculate AF and PAF if OR >= 1
         if (oddsRatio >= 1) {
-            // Calculate Attributable Fraction in Exposed (AFE)
+            // Calculate Attributable Fraction in Exposed (AF)
             attributableFractionExposed = ((oddsRatio - 1) / oddsRatio) * 100;
-            lowerAFE = ((lowerOR - 1) / lowerOR) * 100;
-            upperAFE = ((upperOR - 1) / upperOR) * 100;
+            lowerAF = ((lowerOR - 1) / lowerOR) * 100;
+            upperAF = ((upperOR - 1) / upperOR) * 100;
 
             // Calculate proportion of cases that are exposed (Pe)
             let p_e = a / (a + c);
@@ -212,8 +212,8 @@
 
             // Ensure all results are rounded to three decimal places
             attributableFractionExposed = attributableFractionExposed.toFixed(4);
-            lowerAFE = lowerAFE.toFixed(4);
-            upperAFE = upperAFE.toFixed(4);
+            lowerAF = lowerAF.toFixed(4);
+            upperAF = upperAF.toFixed(4);
             populationAttributableFraction = populationAttributableFraction.toFixed(4);
             lowerPAF = lowerPAF.toFixed(4);
             upperPAF = upperPAF.toFixed(4);
@@ -223,8 +223,8 @@
         document.getElementById("or-result").innerText = oddsRatio.toFixed(4);
         document.getElementById("or-ci").innerText = `(${lowerOR.toFixed(4)} – ${upperOR.toFixed(4)})`;
 
-        document.getElementById("afe-result").innerText = attributableFractionExposed;
-        document.getElementById("afe-ci").innerText = `(${lowerAFE} – ${upperAFE})`;
+        document.getElementById("AF-result").innerText = attributableFractionExposed;
+        document.getElementById("AF-ci").innerText = `(${lowerAF} – ${upperAF})`;
 
         document.getElementById("paf-result").innerText = populationAttributableFraction;
         document.getElementById("paf-ci").innerText = `(${lowerPAF} – ${upperPAF})`;
